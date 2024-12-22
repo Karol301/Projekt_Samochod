@@ -1,89 +1,141 @@
 package com.example.projekt_samochod;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
-import samochod.Pozycja;
-import samochod.Samochod;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import java.io.IOException;
+import samochod.Samochod;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OknoGlowneController {
-    @FXML
-    TextField modelField;
-    @FXML
-    TextField nrRejestracyjnyField;
-    @FXML
-    TextField wagaField;
-    @FXML
-    TextField predkoscField;
 
     @FXML
-    public void start(ActionEvent actionEvent) {
-        String model = modelField.getText();
-        String nrRejestracyjny = nrRejestracyjnyField.getText();
-        double waga = Double.parseDouble(wagaField.getText());
-        double predkosc = Double.parseDouble(predkoscField.getText());
+    private TextField modelField;
+    @FXML
+    private TextField nrRejestracyjnyField;
+    @FXML
+    private TextField wagaField;
+    @FXML
+    private TextField predkoscField;
 
-        Pozycja akt_poz = new Pozycja(0,0);
-        Samochod samochod = new Samochod(model, nrRejestracyjny, akt_poz, waga, predkosc);
+    @FXML
+    private ChoiceBox<String> choiceBoxSamochody;
 
-        System.out.println("Samochod wlaczony" + samochod.getMaxPredkosc());
+    // Lista przechowująca obiekty Samochod
+    private List<Samochod> listaSamochodow = new ArrayList<>();
 
+    // ObservableList do aktualizacji ChoiceBox
+    private ObservableList<String> modeleSamochodow = FXCollections.observableArrayList();
+
+    @FXML
+    public void initialize() {
+        // Ustawienie ObservableList jako dane dla ChoiceBox
+        choiceBoxSamochody.setItems(modeleSamochodow);
+
+        // Listener na zmianę wyboru w ChoiceBox
+        choiceBoxSamochody.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            wyswietlDaneSamochodu(newValue);
+        });
     }
 
-    public void stop(ActionEvent actionEvent) {
-        System.out.println("Samochod wylaczony");
+    // Metoda do ustawienia nowego samochodu
+    public void ustawNowySamochod(Samochod nowySamochod) {
+        if (nowySamochod != null) {
+            // Dodaj samochód do listy
+            listaSamochodow.add(nowySamochod);
+
+            // Dodaj model do ChoiceBox
+            modeleSamochodow.add(nowySamochod.getModel());
+        }
     }
 
-    public void zwiekszBieg(ActionEvent actionEvent) {
-        System.out.println("Bieg zwiekszony");
+    // Wyświetlanie danych samochodu na podstawie wybranego modelu
+    private void wyswietlDaneSamochodu(String model) {
+        for (Samochod samochod : listaSamochodow) {
+            if (samochod.getModel().equals(model)) {
+                modelField.setText(samochod.getModel());
+                nrRejestracyjnyField.setText(samochod.getNrRejest());
+                wagaField.setText(String.valueOf(samochod.getWaga()));
+                predkoscField.setText(String.valueOf(samochod.getMaxPredkosc()));
+                return;
+            }
+        }
+        // Jeśli nie znaleziono modelu, wyczyść pola
+        modelField.clear();
+        nrRejestracyjnyField.clear();
+        wagaField.clear();
+        predkoscField.clear();
     }
 
-    public void zmniejszBieg(ActionEvent actionEvent) {
-        System.out.println("Bieg zmniejszony");
-    }
-
-    public void nacisnij(ActionEvent actionEvent) {
-        System.out.println("Nacisnij");
-    }
-
-    public void zwolnij(ActionEvent actionEvent) {
-        System.out.println("Zwolnij");
-    }
-
-    public void dodajGazu(ActionEvent actionEvent) {
-        System.out.println("Gaz dodany");
-    }
-
-    public void ujmijGazu(ActionEvent actionEvent) {
-        System.out.println("Gaz odjety");
-    }
-
+    // Obsługa przycisku dodania nowego samochodu
     @FXML
     public void dodajSamochod(ActionEvent actionEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("dodanie_samochodu.fxml"));
             Parent root = loader.load();
 
+            // Pobranie kontrolera dla nowego okna
+            DodanieSamochoduController controller = loader.getController();
+            controller.setParentController(this);
+
             Stage stage = new Stage();
-            stage.setWidth(800);
-            stage.setHeight(800);
             stage.setTitle("Dodaj nowy samochód");
             stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // Obsługa przycisku usuwania samochodu
+    @FXML
     public void usunsamochod(ActionEvent actionEvent) {
-        System.out.println("Samochod usuniety");
+        String wybranyModel = choiceBoxSamochody.getValue();
+        if (wybranyModel != null) {
+            // Usuń samochód z listy
+            listaSamochodow.removeIf(samochod -> samochod.getModel().equals(wybranyModel));
+
+            // Usuń model z ChoiceBox
+            modeleSamochodow.remove(wybranyModel);
+
+            // Wyczyść pola szczegółów
+            modelField.clear();
+            nrRejestracyjnyField.clear();
+            wagaField.clear();
+            predkoscField.clear();
+        }
+    }
+
+    public void start(ActionEvent actionEvent) {
+    }
+
+    public void stop(ActionEvent actionEvent) {
+    }
+
+    public void zwiekszBieg(ActionEvent actionEvent) {
+    }
+
+    public void zmniejszBieg(ActionEvent actionEvent) {
+    }
+
+    public void nacisnij(ActionEvent actionEvent) {
+    }
+
+    public void zwolnij(ActionEvent actionEvent) {
+    }
+
+    public void dodajGazu(ActionEvent actionEvent) {
+    }
+
+    public void ujmijGazu(ActionEvent actionEvent) {
     }
 }

@@ -17,6 +17,7 @@ public class Samochod {
         this.model = model;
         this.maxPredkosc = maxPredkosc;
         this.aktPredkosc = 0;
+        this.waga = waga;
         this.aktPozycja = aktpozycja;
     }
 
@@ -41,10 +42,10 @@ public class Samochod {
     private boolean StanWlaczenia(){
         return stanWlaczenia;
     }
-    private String nrRejest(){
+    public String getNrRejest(){
         return nrRejest;
     }
-    private String model(){
+    public String getModel(){
         return model;
     }
     private double maxPredkosc(){

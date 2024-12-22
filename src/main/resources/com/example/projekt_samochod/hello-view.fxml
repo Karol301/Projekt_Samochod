@@ -106,7 +106,7 @@
             <children>
                 <Button fx:id="dodajButton" onAction="#dodajSamochod" layoutX="266.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" text="Dodaj nowy" />
                 <Button fx:id="usunButton" onAction="#usunsamochod" layoutX="382.0" mnemonicParsing="false" text="Usuń" />
-                <ChoiceBox layoutX="84.0" prefWidth="150.0" />
+                <ChoiceBox fx:id="choiceBoxSamochody" layoutX="84.0" prefWidth="150.0" />
                 <Label layoutX="20.0" layoutY="4.0" prefHeight="17.0" prefWidth="64.0" text="Samochód" />
             </children>
         </Pane>

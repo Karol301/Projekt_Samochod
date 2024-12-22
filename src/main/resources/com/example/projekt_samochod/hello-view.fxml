@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="445.0" prefWidth="690.0" fx:controller="com.example.projekt_samochod.OknoGlowneController" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Accordion layoutX="-1.0" layoutY="-1.0" prefHeight="446.0" prefWidth="217.0">
+            <panes>
+                <TitledPane animated="false" text="Samochód">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="345.0" prefWidth="187.0">
+                            <children>
+                                <HBox layoutX="27.0" layoutY="283.0" prefHeight="62.0" prefWidth="161.0">
+                                    <children>
+                                        <Button fx:id="startButton" onAction="#start" mnemonicParsing="false" prefHeight="42.0" prefWidth="84.0" text="Włącz" textAlignment="JUSTIFY" />
+                                        <Button fx:id="stopButton" onAction="#stop" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="42.0" prefWidth="76.0" text="Wyłącz" textAlignment="RIGHT" />
+                                    </children>
+                                </HBox>
+                                <ListView layoutX="10.0" layoutY="34.0" prefHeight="232.0" prefWidth="200.0" />
+                                <Label layoutX="35.0" layoutY="74.0" text="Model" />
+                                <Label layoutX="19.0" layoutY="124.0" prefHeight="17.0" prefWidth="98.0" text="Nr rejestracyjny" />
+                                <Label layoutX="37.0" layoutY="173.0" text="Waga" />
+                                <Label layoutX="28.0" layoutY="222.0" text="Prędkość" />
+                                <TextField fx:id="modelField" layoutX="70.0" layoutY="70.0" prefHeight="25.0" prefWidth="136.0" />
+                                <TextField fx:id="nrRejestracyjnyField" layoutX="102.0" layoutY="120.0" prefHeight="25.0" prefWidth="105.0" />
+                                <TextField fx:id="wagaField" layoutX="69.0" layoutY="169.0" prefHeight="25.0" prefWidth="139.0" />
+                                <TextField fx:id="predkoscField" layoutX="76.0" layoutY="218.0" prefHeight="25.0" prefWidth="129.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Skrzynia Biegów">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="345.0" prefWidth="187.0">
+                            <children>
+                                <HBox layoutX="27.0" layoutY="283.0" prefHeight="62.0" prefWidth="161.0">
+                                    <children>
+                                        <Button fx:id="zwiekszBieg" onAction="#zwiekszBieg" mnemonicParsing="false" prefHeight="42.0" prefWidth="84.0" text="Zwiększ Bieg" textAlignment="JUSTIFY" />
+                                        <Button fx:id="zmiejszBieg" onAction="#zmniejszBieg" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="42.0" prefWidth="76.0" text="Zmienjsz bieg" textAlignment="RIGHT" />
+                                    </children>
+                                </HBox>
+                                <ListView layoutX="10.0" layoutY="34.0" prefHeight="232.0" prefWidth="200.0" />
+                                <Label layoutX="35.0" layoutY="74.0" text="Nazwa" />
+                                <Label layoutX="40.0" layoutY="124.0" prefHeight="17.0" prefWidth="33.0" text="Cena" />
+                                <Label layoutX="37.0" layoutY="173.0" text="Waga" />
+                                <Label layoutX="41.0" layoutY="222.0" text="Bieg" />
+                                <TextField layoutX="70.0" layoutY="70.0" prefHeight="25.0" prefWidth="136.0" />
+                                <TextField layoutX="74.0" layoutY="120.0" prefHeight="25.0" prefWidth="133.0" />
+                                <TextField layoutX="69.0" layoutY="169.0" prefHeight="25.0" prefWidth="139.0" />
+                                <TextField layoutX="68.0" layoutY="218.0" prefHeight="25.0" prefWidth="137.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" prefHeight="363.0" prefWidth="217.0" text="Silnik">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="345.0" prefWidth="187.0">
+                            <children>
+                                <HBox layoutX="27.0" layoutY="283.0" prefHeight="62.0" prefWidth="161.0">
+                                    <children>
+                                        <Button fx:id="nacisnijButton" onAction="#nacisnij" mnemonicParsing="false" prefHeight="42.0" prefWidth="84.0" text="Naciśnij" textAlignment="JUSTIFY" />
+                                        <Button fx:id="zwolnijButton" onAction="#zwolnij" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="42.0" prefWidth="76.0" text="Zwolnij" textAlignment="RIGHT" />
+                                    </children>
+                                </HBox>
+                                <ListView layoutX="10.0" layoutY="34.0" prefHeight="232.0" prefWidth="200.0" />
+                                <Label layoutX="35.0" layoutY="74.0" text="Nazwa" />
+                                <Label layoutX="40.0" layoutY="124.0" prefHeight="17.0" prefWidth="33.0" text="Cena" />
+                                <Label layoutX="37.0" layoutY="173.0" text="Waga" />
+                                <Label layoutX="41.0" layoutY="222.0" text="Stan" />
+                                <TextField layoutX="70.0" layoutY="70.0" prefHeight="25.0" prefWidth="136.0" />
+                                <TextField layoutX="74.0" layoutY="120.0" prefHeight="25.0" prefWidth="133.0" />
+                                <TextField layoutX="69.0" layoutY="169.0" prefHeight="25.0" prefWidth="139.0" />
+                                <TextField layoutX="68.0" layoutY="218.0" prefHeight="25.0" prefWidth="137.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane animated="false" prefHeight="127.0" prefWidth="217.0" text="Sprzęgło">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="345.0" prefWidth="187.0">
+                            <children>
+                                <HBox layoutX="27.0" layoutY="283.0" prefHeight="62.0" prefWidth="161.0">
+                                    <children>
+                                        <Button fx:id="dodajGazuButton" onAction="#dodajGazu" mnemonicParsing="false" prefHeight="42.0" prefWidth="84.0" text="Dodaj gazu" textAlignment="JUSTIFY" />
+                                        <Button fx:id="ujmijGazuButton" onAction="#ujmijGazu" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="42.0" prefWidth="76.0" text="Ujmij gazu" textAlignment="RIGHT" />
+                                    </children>
+                                </HBox>
+                                <ListView layoutX="10.0" layoutY="34.0" prefHeight="232.0" prefWidth="200.0" />
+                                <Label layoutX="35.0" layoutY="74.0" text="Nazwa" />
+                                <Label layoutX="40.0" layoutY="124.0" prefHeight="17.0" prefWidth="33.0" text="Cena" />
+                                <Label layoutX="37.0" layoutY="173.0" text="Waga" />
+                                <Label layoutX="34.0" layoutY="222.0" text="Obroty" />
+                                <TextField layoutX="70.0" layoutY="70.0" prefHeight="25.0" prefWidth="136.0" />
+                                <TextField layoutX="74.0" layoutY="120.0" prefHeight="25.0" prefWidth="133.0" />
+                                <TextField layoutX="69.0" layoutY="169.0" prefHeight="25.0" prefWidth="139.0" />
+                                <TextField layoutX="73.0" layoutY="218.0" prefHeight="25.0" prefWidth="132.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+            </panes>
+        </Accordion>
+        <HBox layoutX="216.0" layoutY="-2.0" prefHeight="25.0" prefWidth="472.0" />
+        <Pane layoutX="216.0" layoutY="3.0" prefHeight="32.0" prefWidth="479.0">
+            <children>
+                <Button fx:id="dodajButton" onAction="#dodajSamochod" layoutX="266.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="90.0" text="Dodaj nowy" />
+                <Button fx:id="usunButton" onAction="#usunsamochod" layoutX="382.0" mnemonicParsing="false" text="Usuń" />
+                <ChoiceBox layoutX="84.0" prefWidth="150.0" />
+                <Label layoutX="20.0" layoutY="4.0" prefHeight="17.0" prefWidth="64.0" text="Samochód" />
+            </children>
+        </Pane>
+        <Pane layoutX="216.0" layoutY="35.0" prefHeight="412.0" prefWidth="472.0" />
+    </children>
+</Pane>

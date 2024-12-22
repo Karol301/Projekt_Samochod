@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projekt_samochod.DodanieSamochoduController" spacing="10" alignment="CENTER" prefHeight="800.0" prefWidth="800.0">
+    <children>
+        <Label text="Dodaj nowy samochód" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Nazwa:" minWidth="100" alignment="CENTER_RIGHT" />
+            <TextField fx:id="nazwaField"  />
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Nr rejestracyjny:" minWidth="100" alignment="CENTER_RIGHT" />
+            <TextField fx:id="nrRejestracyjnyField"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Waga:" minWidth="100" alignment="CENTER_RIGHT" />
+            <TextField fx:id="wagaField" />
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Prędkość:" minWidth="100" alignment="CENTER_RIGHT" />
+            <TextField fx:id="predkoscField"/>
+        </HBox>
+
+        <Button fx:id="dodajButton" text="Dodaj" onAction="#dodaj_samochod_accept" maxWidth="100" />
+    </children>
+</VBox>

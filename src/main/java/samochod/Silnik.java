@@ -1,40 +1,41 @@
 package samochod;
 
-public class Silnik {
+public class Silnik extends Komponent {
     private int maxObroty;
     private int obroty;
 
-    public Silnik(int maxObroty) {
+    public Silnik(String nazwa, double waga, double cena, int maxObroty) {
+        super(nazwa, waga, cena);
         this.maxObroty = maxObroty;
-
-    }
-
-    public void uruchom() {
-        this.obroty = 1000;
-    }
-
-    public void zatrzymaj() {
         this.obroty = 0;
     }
 
+    public void uruchom() {
+        obroty = 1000; // domyślne obroty początkowe
+    }
+
+    public void zatrzymaj() {
+        obroty = 0;
+    }
+
+    public void zwiekszObroty() {
+        if (obroty < maxObroty) {
+            obroty += 500;
+        }
+    }
+
+    public void zmniejszObroty() {
+        if (obroty > 0) {
+            obroty -= 500;
+        }
+    }
+
+    public int getMaxObroty() {
+        return maxObroty;
+    }
+
     public int getObroty() {
-        return this.obroty;
-    }
-
-    public void zwiekszObroty(int wartosc) {
-        if (this.obroty + wartosc <= maxObroty) {
-            this.obroty += wartosc;
-        } else {
-            this.obroty = maxObroty;
-        }
-    }
-
-    public void zmniejszObroty(int wartosc) {
-        if (this.obroty - wartosc >= 0) {
-            this.obroty -= wartosc;
-        } else {
-            this.obroty = 0;
-        }
+        return obroty;
     }
 }
 

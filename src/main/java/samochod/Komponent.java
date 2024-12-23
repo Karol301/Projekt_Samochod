@@ -1,14 +1,14 @@
 package samochod;
 
-public class Komponent {
-    private String nazwa;
-    private double waga;
-    private double cena;
+public abstract class Komponent {
+    protected String nazwa;
+    protected double waga;
+    protected double cena;
 
-    public Komponent(double cena, double waga, String nazwa) {
-        this.cena = cena;
-        this.waga = waga;
+    public Komponent(String nazwa, double waga, double cena) {
         this.nazwa = nazwa;
+        this.waga = waga;
+        this.cena = cena;
     }
 
     public String getNazwa() {

@@ -4,16 +4,17 @@ public class SkrzyniaBiegow {
     private int aktualnyBieg;
     private int iloscBiegow;
     private double aktualnePrzelozenie;
-    private Sprzeglo sprzeglo;
 
     public SkrzyniaBiegow(int iloscBiegow) {
-        this.aktualnyBieg = 0;
         this.iloscBiegow = iloscBiegow;
-        this.sprzeglo = new Sprzeglo();
+        this.aktualnyBieg = 0;
+        this.aktualnePrzelozenie = 1.0;
     }
 
-    public void zwiększBieg() {
-        aktualnyBieg++;
+    public void zwiekszBieg() {
+        if (aktualnyBieg < iloscBiegow) {
+            aktualnyBieg++;
+        }
     }
 
     public void zmniejszBieg() {
@@ -30,7 +31,7 @@ public class SkrzyniaBiegow {
         return aktualnePrzelozenie;
     }
 
-    public Sprzeglo getSprzeglo() {
-        return sprzeglo;
+    public void setAktPrzelozenie(double przelozenie) {
+        this.aktualnePrzelozenie = przelozenie;
     }
 }

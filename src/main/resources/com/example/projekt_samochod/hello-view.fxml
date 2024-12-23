@@ -67,11 +67,11 @@
                                 <Label layoutX="35.0" layoutY="74.0" text="Nazwa" />
                                 <Label layoutX="40.0" layoutY="124.0" prefHeight="17.0" prefWidth="33.0" text="Cena" />
                                 <Label layoutX="37.0" layoutY="173.0" text="Waga" />
-                                <Label layoutX="41.0" layoutY="222.0" text="Stan" />
-                                <TextField layoutX="70.0" layoutY="70.0" prefHeight="25.0" prefWidth="136.0" />
-                                <TextField layoutX="74.0" layoutY="120.0" prefHeight="25.0" prefWidth="133.0" />
-                                <TextField layoutX="69.0" layoutY="169.0" prefHeight="25.0" prefWidth="139.0" />
-                                <TextField layoutX="68.0" layoutY="218.0" prefHeight="25.0" prefWidth="137.0" />
+                                <Label layoutX="41.0" layoutY="222.0" text="Max obroty" />
+                                <TextField fx:id="silnikNazwaField" layoutX="70.0" layoutY="70.0" prefHeight="25.0" prefWidth="136.0" />
+                                <TextField fx:id="silnikCenaField" layoutX="74.0" layoutY="120.0" prefHeight="25.0" prefWidth="133.0" />
+                                <TextField fx:id="silnikWagaField" layoutX="69.0" layoutY="169.0" prefHeight="25.0" prefWidth="139.0" />
+                                <TextField fx:id="MaxObrotySilnikaField" layoutX="68.0" layoutY="218.0" prefHeight="25.0" prefWidth="137.0" />
                             </children>
                         </AnchorPane>
                     </content>

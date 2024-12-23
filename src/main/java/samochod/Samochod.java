@@ -2,53 +2,63 @@ package samochod;
 
 public class Samochod {
     private boolean stanWlaczenia;
-    private String nrRejest;
+    private String nrRejestr;
     private String model;
-    private double maxPredkosc;
-    private double aktPredkosc;
-    private double waga;
-    private Pozycja aktPozycja;
+    private double predkoscMax;
+    private Pozycja aktualnaPozycja;
     private SkrzyniaBiegow skrzynia;
     private Silnik silnik;
+    private Sprzeglo sprzeglo;
 
-    public Samochod(String nrRejest, String model, Pozycja aktpozycja, double maxPredkosc, double waga) {
-        this.stanWlaczenia = false;
-        this.nrRejest = nrRejest;
+    public Samochod(String nrRejestr, String model, Pozycja aktualnaPozycja, double predkoscMax, double waga) {
+        this.nrRejestr = nrRejestr;
         this.model = model;
-        this.maxPredkosc = maxPredkosc;
-        this.aktPredkosc = 0;
-        this.waga = waga;
-        this.aktPozycja = aktpozycja;
+        this.aktualnaPozycja = aktualnaPozycja;
+        this.predkoscMax = predkoscMax;
+        this.skrzynia = new SkrzyniaBiegow(6);
+        this.silnik = new Silnik("Silnik", waga, 0, 5000);
+        this.sprzeglo = new Sprzeglo();
     }
 
-    public void wlacz(){
+    public void wlacz() {
         stanWlaczenia = true;
+        silnik.uruchom();
     }
-    public void wylacz(){
+
+    public void wylacz() {
         stanWlaczenia = false;
+        silnik.zatrzymaj();
     }
-    public double getWaga(){
-        return waga;
+
+    public void jedzDo(Pozycja cel) {
+        aktualnaPozycja = cel;
     }
-    public double getAktPredkosc(){
-        return aktPredkosc;
+
+    public double getWaga() {
+        return silnik.getWaga(); // uproszczone obliczenie
     }
-    public Pozycja getAktPozycja(){
-        return aktPozycja;
+
+    public double getAktPredkosc() {
+        return predkoscMax * skrzynia.getAktPrzelozenie();
     }
-    public double getMaxPredkosc(){
-        return maxPredkosc;
+
+    public Pozycja getAktPozycja() {
+        return aktualnaPozycja;
     }
-    private boolean StanWlaczenia(){
-        return stanWlaczenia;
-    }
-    public String getNrRejest(){
-        return nrRejest;
-    }
-    public String getModel(){
+
+    public String getModel() {
         return model;
     }
-    private double maxPredkosc(){
-        return maxPredkosc;
+
+    public String getNrRejest() {
+        return nrRejestr;
+    }
+
+    public double getMaxPredkosc() {
+        return predkoscMax;
+    }
+
+    public Silnik getSilnik() {
+        return silnik;
     }
 }

@@ -6,19 +6,27 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import samochod.Pozycja;
 import samochod.Samochod;
+import samochod.Silnik;
 
 public class DodanieSamochoduController {
 
     @FXML
-    private TextField nazwaField;
+    private TextField nazwaSamochoduField;
     @FXML
     private TextField nrRejestracyjnyField;
     @FXML
-    private TextField wagaField;
+    private TextField wagaSamochoduField;
     @FXML
-    private TextField predkoscField;
+    private TextField predkoscSamochoduField;
 
-    private Samochod nowySamochod;
+    @FXML
+    private TextField nazwaSilnikaField;
+    @FXML
+    private TextField cenaSilnikaField;
+    @FXML
+    private TextField wagaSilnikaField;
+    @FXML
+    private TextField MaxObrotySilnikaField;
 
     private OknoGlowneController parentController;
 
@@ -29,23 +37,34 @@ public class DodanieSamochoduController {
     @FXML
     public void dodaj_samochod_accept(ActionEvent actionEvent) {
         try {
-            // Pobranie danych z pól tekstowych
-            String model = nazwaField.getText();
+            // Pobranie danych dla samochodu
+            String model = nazwaSamochoduField.getText();
             String nrRejestracyjny = nrRejestracyjnyField.getText();
-            double waga = Double.parseDouble(wagaField.getText());
-            double predkosc = Double.parseDouble(predkoscField.getText());
+            double wagaSamochodu = Double.parseDouble(wagaSamochoduField.getText());
+            double predkoscMax = Double.parseDouble(predkoscSamochoduField.getText());
 
-            // Tworzenie nowego samochodu
-            Pozycja aktPoz = new Pozycja(0, 0);
-            nowySamochod = new Samochod(nrRejestracyjny, model, aktPoz, predkosc, waga);
+            // Pobranie danych dla silnika
+            String nazwaSilnika = nazwaSilnikaField.getText();
+            double cenaSilnika = Double.parseDouble(cenaSilnikaField.getText());
+            double wagaSilnika = Double.parseDouble(wagaSilnikaField.getText());
+            int maxObroty = Integer.parseInt(MaxObrotySilnikaField.getText());
 
-            // Przekazanie nowego samochodu do głównego okna
+            // Utworzenie samochodu i silnika
+            Pozycja startowaPozycja = new Pozycja(0, 0);
+            Silnik silnik = new Silnik(nazwaSilnika, wagaSilnika, cenaSilnika, maxObroty);
+            Samochod samochod = new Samochod(nrRejestracyjny, model, startowaPozycja, predkoscMax, wagaSamochodu);
+
+            // Przekazanie danych do głównego okna
             if (parentController != null) {
-                parentController.ustawNowySamochod(nowySamochod);
+                parentController.ustawNowySamochod(samochod);
+            }
+
+            if (parentController != null) {
+                parentController.ustawNowySilnik(silnik);
             }
 
             // Zamknięcie okna
-            Stage stage = (Stage) nazwaField.getScene().getWindow();
+            Stage stage = (Stage) nazwaSamochoduField.getScene().getWindow();
             stage.close();
 
         } catch (Exception e) {

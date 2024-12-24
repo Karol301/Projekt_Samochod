@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import samochod.Komponent;
 import samochod.Pozycja;
 import samochod.Samochod;
 import samochod.Silnik;
@@ -25,8 +26,20 @@ public class DodanieSamochoduController {
     private TextField cenaSilnikaField;
     @FXML
     private TextField wagaSilnikaField;
+
     @FXML
-    private TextField MaxObrotySilnikaField;
+    private TextField nazwaSkrzyniField;
+    @FXML
+    private TextField cenaSkrzyniField;
+    @FXML
+    private TextField wagaSkrzyniField;
+
+    @FXML
+    private TextField nazwaSprzeglaField;
+    @FXML
+    private TextField cenaSprzeglaField;
+    @FXML
+    private TextField wagaSprzeglaField;
 
     private OknoGlowneController parentController;
 
@@ -47,20 +60,27 @@ public class DodanieSamochoduController {
             String nazwaSilnika = nazwaSilnikaField.getText();
             double cenaSilnika = Double.parseDouble(cenaSilnikaField.getText());
             double wagaSilnika = Double.parseDouble(wagaSilnikaField.getText());
-            int maxObroty = Integer.parseInt(MaxObrotySilnikaField.getText());
+
+            //Pobranie danych dla skrzyni biegów
+            String nazwaSkrzyni = nazwaSkrzyniField.getText();
+            double cenaSkrzyni = Double.parseDouble(cenaSkrzyniField.getText());
+            double wagaSkrzyni = Double.parseDouble(wagaSkrzyniField.getText());
+
+            //Pobranie danych dla skrzyni biegów
+            String nazwaSprzegla = nazwaSprzeglaField.getText();
+            double cenaSprzegla = Double.parseDouble(cenaSprzeglaField.getText());
+            double wagaSprzegla = Double.parseDouble(wagaSprzeglaField.getText());
 
             // Utworzenie samochodu i silnika
             Pozycja startowaPozycja = new Pozycja(0, 0);
-            Silnik silnik = new Silnik(nazwaSilnika, wagaSilnika, cenaSilnika, maxObroty);
             Samochod samochod = new Samochod(nrRejestracyjny, model, startowaPozycja, predkoscMax, wagaSamochodu);
+            Komponent silnik_komponent = new Komponent(nazwaSilnika, wagaSilnika, cenaSilnika);
+            Komponent skrzynia_biegow_komponent = new Komponent(nazwaSkrzyni, wagaSkrzyni, cenaSkrzyni);
+            Komponent sprzeglo_komponent = new Komponent(nazwaSprzegla, wagaSprzegla, cenaSprzegla);
 
             // Przekazanie danych do głównego okna
             if (parentController != null) {
-                parentController.ustawNowySamochod(samochod);
-            }
-
-            if (parentController != null) {
-                parentController.ustawNowySilnik(silnik);
+                parentController.ustawNowySamochod(samochod, silnik_komponent, skrzynia_biegow_komponent, sprzeglo_komponent);
             }
 
             // Zamknięcie okna

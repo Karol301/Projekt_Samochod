@@ -1,6 +1,6 @@
 package samochod;
 
-public abstract class Komponent {
+public class Komponent {
     protected String nazwa;
     protected double waga;
     protected double cena;

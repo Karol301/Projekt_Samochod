@@ -9,6 +9,7 @@ public class Samochod {
     private SkrzyniaBiegow skrzynia;
     private Silnik silnik;
     private Sprzeglo sprzeglo;
+    private double waga;
 
     public Samochod(String nrRejestr, String model, Pozycja aktualnaPozycja, double predkoscMax, double waga) {
         this.nrRejestr = nrRejestr;
@@ -16,8 +17,8 @@ public class Samochod {
         this.aktualnaPozycja = aktualnaPozycja;
         this.predkoscMax = predkoscMax;
         this.skrzynia = new SkrzyniaBiegow(6);
-        this.silnik = new Silnik("Silnik", waga, 0, 5000);
         this.sprzeglo = new Sprzeglo();
+        this.waga = waga;
     }
 
     public void wlacz() {
@@ -35,7 +36,7 @@ public class Samochod {
     }
 
     public double getWaga() {
-        return silnik.getWaga(); // uproszczone obliczenie
+        return waga;
     }
 
     public double getAktPredkosc() {

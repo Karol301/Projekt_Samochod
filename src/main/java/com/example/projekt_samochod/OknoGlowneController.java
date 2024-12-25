@@ -14,12 +14,17 @@ import samochod.Komponent;
 import samochod.Samochod;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import samochod.SkrzyniaBiegow;
+import samochod.Sprzeglo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OknoGlowneController {
 
+    public TextField BiegSkrzyniField;
+    @FXML
+    public TextField StanSprzeglaField;
     @FXML
     private TextField modelField;
     @FXML
@@ -59,6 +64,9 @@ public class OknoGlowneController {
     private List<Komponent> listaKomponentowSprzegla = new ArrayList<>();
     private ObservableList<String> modeleSamochodow = FXCollections.observableArrayList();
 
+    SkrzyniaBiegow skrzynia_biegow = new SkrzyniaBiegow();
+    Sprzeglo sprzeglo = new Sprzeglo();
+
     @FXML
     public void initialize() {
         choiceBoxSamochody.setItems(modeleSamochodow);
@@ -72,7 +80,7 @@ public class OknoGlowneController {
     private void pokazObrazSamochodu(String model) {
         if (model != null && !model.isEmpty()) {
             try {
-                String imagePath = "src/main/resources/samochod.png";
+                String imagePath = "/com/example/projekt_samochod/samochod.png";
                 Image carImage = new Image(getClass().getResource(imagePath).toExternalForm());
 
                 carImageView.setImage(carImage);
@@ -87,13 +95,22 @@ public class OknoGlowneController {
     }
 
     public void ustawNowySamochod(Samochod samochod, Komponent silnik, Komponent skrzynia, Komponent sprzeglo) {
-        if (samochod != null && silnik != null && skrzynia != null) {
+        if (samochod != null && silnik != null && skrzynia != null && sprzeglo != null) {
             listaSamochodow.add(samochod);
             listaKomponentowSilnika.add(silnik);
             listaKomponentowSkrzyni.add(skrzynia);
             listaKomponentowSprzegla.add(sprzeglo);
             modeleSamochodow.add(samochod.getModel());
         }
+    }
+
+    private void odswiezStanSkrzyni() {
+        BiegSkrzyniField.setText(String.valueOf(skrzynia_biegow.getAktBieg()));
+    }
+
+    private void odswiezStanSprzegla() {
+        boolean stan = sprzeglo.getStanSprzegla();
+        StanSprzeglaField.setText(stan ? "Naciśnięte" : "Nie wciśnięte");
     }
 
     private void wyswietlDaneSamochodu(String model) {
@@ -114,11 +131,13 @@ public class OknoGlowneController {
                 NazwaSkrzyniField.setText(komponentSkrzyniBiegow.getNazwa());
                 WagaSkrzyniField.setText(String.valueOf(komponentSkrzyniBiegow.getWaga()));
                 CenaSkrzyniField.setText(String.valueOf(komponentSkrzyniBiegow.getCena()));
+                odswiezStanSkrzyni();
 
                 Komponent komponentSprzeglo = listaKomponentowSprzegla.get(i);
                 nazwaSprzeglaField.setText(komponentSprzeglo.getNazwa());
-                CenaSprzeglaField.setText(String.valueOf(komponentSprzeglo.getWaga()));
-                WagaSprzeglaField.setText(String.valueOf(komponentSprzeglo.getCena()));
+                CenaSprzeglaField.setText(String.valueOf(komponentSprzeglo.getCena()));
+                WagaSprzeglaField.setText(String.valueOf(komponentSprzeglo.getWaga()));
+                odswiezStanSprzegla();
                 return;
             }
         }
@@ -158,30 +177,62 @@ public class OknoGlowneController {
         }
     }
 
-    public void start(ActionEvent actionEvent) {
-    }
-
-    public void stop(ActionEvent actionEvent) {
-    }
-
-    public void zwiekszBieg(ActionEvent actionEvent) {
-    }
-
-    public void zmniejszBieg(ActionEvent actionEvent) {
-    }
-
-    public void nacisnij(ActionEvent actionEvent) {
-    }
-
-    public void zwolnij(ActionEvent actionEvent) {
-    }
-
-    public void dodajGazu(ActionEvent actionEvent) {
-    }
-
-    public void ujmijGazu(ActionEvent actionEvent) {
+    private void usunWybranySamochod(String model) {
+        for (int i = 0; i < listaSamochodow.size(); i++) {
+            if (listaSamochodow.get(i).getModel().equals(model)) {
+                listaSamochodow.remove(i);
+                listaKomponentowSilnika.remove(i);
+                listaKomponentowSkrzyni.remove(i);
+                listaKomponentowSprzegla.remove(i);
+                modeleSamochodow.remove(model);
+                break;
+            }
+        }
     }
 
     public void usunsamochod(ActionEvent actionEvent) {
+        String wybranyModel = choiceBoxSamochody.getValue();
+
+        if (wybranyModel != null) {
+            usunWybranySamochod(wybranyModel);
+        } else {
+            System.out.println("Nie wybrano modelu do usunięcia");
+        }
+    }
+
+    public void start(ActionEvent actionEvent) {
+        System.out.println("Uruchomiono samochód");
+    }
+
+    public void stop(ActionEvent actionEvent) {
+        System.out.println("Zatrzymano samochód");
+    }
+
+    public void zwiekszBieg(ActionEvent actionEvent) {
+        skrzynia_biegow.zwiekszBieg();
+        odswiezStanSkrzyni();
+    }
+
+    public void zmniejszBieg(ActionEvent actionEvent) {
+        skrzynia_biegow.zmniejszBieg();
+        odswiezStanSkrzyni();
+    }
+
+    public void nacisnij(ActionEvent actionEvent) {
+        sprzeglo.wcisnij();
+        odswiezStanSprzegla();
+    }
+
+    public void zwolnij(ActionEvent actionEvent) {
+        sprzeglo.zwolnij();
+        odswiezStanSprzegla();
+    }
+
+    public void dodajGazu(ActionEvent actionEvent) {
+        System.out.println("Dodano gazu");
+    }
+
+    public void ujmijGazu(ActionEvent actionEvent) {
+        System.out.println("Ujęto gazu");
     }
 }

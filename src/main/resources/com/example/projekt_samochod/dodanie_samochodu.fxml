@@ -28,29 +28,6 @@
             <TextField fx:id="predkoscSamochoduField" />
         </HBox>
 
-        <!-- Informacje o silniku -->
-        <Label text="Informacje o silniku" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
-
-        <HBox spacing="10" alignment="CENTER">
-            <Label text="Nazwa silnika:" minWidth="150" alignment="CENTER_RIGHT" />
-            <TextField fx:id="nazwaSilnikaField" />
-        </HBox>
-
-        <HBox spacing="10" alignment="CENTER">
-            <Label text="Cena silnika:" minWidth="150" alignment="CENTER_RIGHT" />
-            <TextField fx:id="cenaSilnikaField" />
-        </HBox>
-
-        <HBox spacing="10" alignment="CENTER">
-            <Label text="Waga silnika:" minWidth="150" alignment="CENTER_RIGHT" />
-            <TextField fx:id="wagaSilnikaField" />
-        </HBox>
-
-        <HBox spacing="10" alignment="CENTER">
-            <Label text="Max obroty silnika:" minWidth="150" alignment="CENTER_RIGHT" />
-            <TextField fx:id="MaxObrotySilnikaField" />
-        </HBox>
-
         <!-- Informacje o skrzyni biegów -->
         <Label text="Informacje o skrzyni biegów" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
 
@@ -69,9 +46,22 @@
             <TextField fx:id="wagaSkrzyniField" />
         </HBox>
 
+        <!-- Informacje o silniku -->
+        <Label text="Informacje o silniku" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+
         <HBox spacing="10" alignment="CENTER">
-            <Label text="Bieg skrzyni biegów:" minWidth="150" alignment="CENTER_RIGHT" />
-            <TextField fx:id="biegSkrzyniField" />
+            <Label text="Nazwa silnika:" minWidth="150" alignment="CENTER_RIGHT" />
+            <TextField fx:id="nazwaSilnikaField" />
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Cena silnika:" minWidth="150" alignment="CENTER_RIGHT" />
+            <TextField fx:id="cenaSilnikaField" />
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Waga silnika:" minWidth="150" alignment="CENTER_RIGHT" />
+            <TextField fx:id="wagaSilnikaField" />
         </HBox>
 
         <!-- Informacje o sprzęgle -->
@@ -90,11 +80,6 @@
         <HBox spacing="10" alignment="CENTER">
             <Label text="Waga sprzęgła:" minWidth="150" alignment="CENTER_RIGHT" />
             <TextField fx:id="wagaSprzeglaField" />
-        </HBox>
-
-        <HBox spacing="10" alignment="CENTER">
-            <Label text="Obroty sprzęgła:" minWidth="150" alignment="CENTER_RIGHT" />
-            <TextField fx:id="obrotySprzeglaField" />
         </HBox>
 
         <Button fx:id="dodajButton" text="Dodaj" onAction="#dodaj_samochod_accept" maxWidth="150" />

@@ -66,7 +66,7 @@ public class DodanieSamochoduController {
             double cenaSkrzyni = Double.parseDouble(cenaSkrzyniField.getText());
             double wagaSkrzyni = Double.parseDouble(wagaSkrzyniField.getText());
 
-            //Pobranie danych dla skrzyni biegów
+            //Pobranie danych dla sprzegla
             String nazwaSprzegla = nazwaSprzeglaField.getText();
             double cenaSprzegla = Double.parseDouble(cenaSprzeglaField.getText());
             double wagaSprzegla = Double.parseDouble(wagaSprzeglaField.getText());

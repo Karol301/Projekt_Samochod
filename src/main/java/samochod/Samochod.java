@@ -16,9 +16,11 @@ public class Samochod {
         this.model = model;
         this.aktualnaPozycja = aktualnaPozycja;
         this.predkoscMax = predkoscMax;
-        this.skrzynia = new SkrzyniaBiegow(6);
-        this.sprzeglo = new Sprzeglo();
         this.waga = waga;
+
+        // Inicjalizacja indywidualnych komponentów dla samochodu
+        this.skrzynia = new SkrzyniaBiegow();
+        this.sprzeglo = new Sprzeglo();
     }
 
     public void wlacz() {
@@ -57,6 +59,14 @@ public class Samochod {
 
     public double getMaxPredkosc() {
         return predkoscMax;
+    }
+
+    public SkrzyniaBiegow getSkrzyniaBiegow() {
+        return skrzynia;
+    }
+
+    public Sprzeglo getSprzeglo() {
+        return sprzeglo;
     }
 
     public Silnik getSilnik() {

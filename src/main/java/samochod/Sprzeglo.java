@@ -3,7 +3,7 @@ package samochod;
 public class Sprzeglo {
     private boolean stanSprzegla;
 
-    public Sprzeglo(){
+    public Sprzeglo(String model){
         this.stanSprzegla = false;
     }
 

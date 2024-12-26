@@ -17,10 +17,6 @@ public class Samochod {
         this.aktualnaPozycja = aktualnaPozycja;
         this.predkoscMax = predkoscMax;
         this.waga = waga;
-
-        // Inicjalizacja indywidualnych komponentów dla samochodu
-        this.skrzynia = new SkrzyniaBiegow();
-        this.sprzeglo = new Sprzeglo();
     }
 
     public void wlacz() {

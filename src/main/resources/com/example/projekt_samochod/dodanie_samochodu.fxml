@@ -64,6 +64,11 @@
             <TextField fx:id="wagaSilnikaField" />
         </HBox>
 
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Max obroty silnika:" minWidth="150" alignment="CENTER_RIGHT" />
+            <TextField fx:id="maxObrotySilnikaField" />
+        </HBox>
+
         <!-- Informacje o sprzęgle -->
         <Label text="Informacje o sprzęgle" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
 

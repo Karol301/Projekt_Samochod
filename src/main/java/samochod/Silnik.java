@@ -18,6 +18,7 @@ public class Silnik extends Komponent {
         obroty = 0;
     }
 
+
     public void zwiekszObroty() {
         if (obroty < maxObroty) {
             obroty += 500;

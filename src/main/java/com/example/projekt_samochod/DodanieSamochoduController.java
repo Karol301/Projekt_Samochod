@@ -40,6 +40,8 @@ public class DodanieSamochoduController {
     private TextField cenaSprzeglaField;
     @FXML
     private TextField wagaSprzeglaField;
+    @FXML
+    private TextField maxObrotySilnikaField;
 
     private OknoGlowneController parentController;
 
@@ -60,6 +62,7 @@ public class DodanieSamochoduController {
             String nazwaSilnika = nazwaSilnikaField.getText();
             double cenaSilnika = Double.parseDouble(cenaSilnikaField.getText());
             double wagaSilnika = Double.parseDouble(wagaSilnikaField.getText());
+            int maxObrotySilnika = Integer.parseInt(maxObrotySilnikaField.getText());
 
             //Pobranie danych dla skrzyni biegów
             String nazwaSkrzyni = nazwaSkrzyniField.getText();
@@ -74,13 +77,13 @@ public class DodanieSamochoduController {
             // Utworzenie samochodu i silnika
             Pozycja startowaPozycja = new Pozycja(0, 0);
             Samochod samochod = new Samochod(nrRejestracyjny, model, startowaPozycja, predkoscMax, wagaSamochodu);
-            Komponent silnik_komponent = new Komponent(nazwaSilnika, wagaSilnika, cenaSilnika);
+            Silnik silnik = new Silnik(nazwaSilnika, wagaSilnika, cenaSilnika, maxObrotySilnika);
             Komponent skrzynia_biegow_komponent = new Komponent(nazwaSkrzyni, wagaSkrzyni, cenaSkrzyni);
             Komponent sprzeglo_komponent = new Komponent(nazwaSprzegla, wagaSprzegla, cenaSprzegla);
 
             // Przekazanie danych do głównego okna
             if (parentController != null) {
-                parentController.ustawNowySamochod(samochod, silnik_komponent, skrzynia_biegow_komponent, sprzeglo_komponent);
+                parentController.ustawNowySamochod(samochod, silnik, skrzynia_biegow_komponent, sprzeglo_komponent);
             }
 
             // Zamknięcie okna

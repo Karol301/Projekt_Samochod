@@ -10,14 +10,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import samochod.Komponent;
-import samochod.Samochod;
+import samochod.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import samochod.SkrzyniaBiegow;
-import samochod.Sprzeglo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class OknoGlowneController {
@@ -59,13 +57,15 @@ public class OknoGlowneController {
     private ChoiceBox<String> choiceBoxSamochody;
 
     private List<Samochod> listaSamochodow = new ArrayList<>();
-    private List<Komponent> listaKomponentowSilnika = new ArrayList<>();
+    private List<Silnik> listaKomponentowSilnika = new ArrayList<>();
     private List<Komponent> listaKomponentowSkrzyni = new ArrayList<>();
     private List<Komponent> listaKomponentowSprzegla = new ArrayList<>();
     private ObservableList<String> modeleSamochodow = FXCollections.observableArrayList();
+    public HashMap<String, String> stanSprzeglaSamochodu = new HashMap<>();
+    public HashMap<String, Integer> biegSamochodu = new HashMap<>();
 
-    SkrzyniaBiegow skrzynia_biegow = new SkrzyniaBiegow();
-    Sprzeglo sprzeglo = new Sprzeglo();
+    private Sprzeglo sprzeglo;
+    private SkrzyniaBiegow skrzynia_biegow;
 
     @FXML
     public void initialize() {
@@ -74,6 +74,11 @@ public class OknoGlowneController {
         choiceBoxSamochody.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             wyswietlDaneSamochodu(newValue);
             pokazObrazSamochodu(newValue);
+            if (newValue != null) {
+                String wybranyModel = newValue;
+                skrzynia_biegow = new SkrzyniaBiegow(wybranyModel);
+                sprzeglo = new Sprzeglo(wybranyModel);
+            }
         });
     }
 
@@ -94,23 +99,17 @@ public class OknoGlowneController {
         }
     }
 
-    public void ustawNowySamochod(Samochod samochod, Komponent silnik, Komponent skrzynia, Komponent sprzeglo) {
+    public void ustawNowySamochod(Samochod samochod, Silnik silnik, Komponent skrzynia, Komponent sprzeglo) {
         if (samochod != null && silnik != null && skrzynia != null && sprzeglo != null) {
             listaSamochodow.add(samochod);
             listaKomponentowSilnika.add(silnik);
             listaKomponentowSkrzyni.add(skrzynia);
             listaKomponentowSprzegla.add(sprzeglo);
             modeleSamochodow.add(samochod.getModel());
+
+            // Aktualizacja ChoiceBox
+            choiceBoxSamochody.setItems(modeleSamochodow);
         }
-    }
-
-    private void odswiezStanSkrzyni() {
-        BiegSkrzyniField.setText(String.valueOf(skrzynia_biegow.getAktBieg()));
-    }
-
-    private void odswiezStanSprzegla() {
-        boolean stan = sprzeglo.getStanSprzegla();
-        StanSprzeglaField.setText(stan ? "Naciśnięte" : "Nie wciśnięte");
     }
 
     private void wyswietlDaneSamochodu(String model) {
@@ -122,22 +121,21 @@ public class OknoGlowneController {
                 wagaField.setText(String.valueOf(samochod.getWaga()));
                 predkoscField.setText(String.valueOf(samochod.getMaxPredkosc()));
 
-                Komponent KomponentSilnik = listaKomponentowSilnika.get(i);
-                silnikNazwaField.setText(KomponentSilnik.getNazwa());
-                silnikCenaField.setText(String.valueOf(KomponentSilnik.getCena()));
-                silnikWagaField.setText(String.valueOf(KomponentSilnik.getWaga()));
+                Silnik silnik = listaKomponentowSilnika.get(i);
+                silnikNazwaField.setText(silnik.getNazwa());
+                silnikCenaField.setText(String.valueOf(silnik.getCena()));
+                silnikWagaField.setText(String.valueOf(silnik.getWaga()));
+                MaxObrotySilnikaField.setText(String.valueOf(silnik.getMaxObroty()));
 
                 Komponent komponentSkrzyniBiegow = listaKomponentowSkrzyni.get(i);
                 NazwaSkrzyniField.setText(komponentSkrzyniBiegow.getNazwa());
                 WagaSkrzyniField.setText(String.valueOf(komponentSkrzyniBiegow.getWaga()));
                 CenaSkrzyniField.setText(String.valueOf(komponentSkrzyniBiegow.getCena()));
-                odswiezStanSkrzyni();
 
                 Komponent komponentSprzeglo = listaKomponentowSprzegla.get(i);
                 nazwaSprzeglaField.setText(komponentSprzeglo.getNazwa());
                 CenaSprzeglaField.setText(String.valueOf(komponentSprzeglo.getCena()));
                 WagaSprzeglaField.setText(String.valueOf(komponentSprzeglo.getWaga()));
-                odswiezStanSprzegla();
                 return;
             }
         }
@@ -200,32 +198,124 @@ public class OknoGlowneController {
         }
     }
 
+    public void nacisnij(ActionEvent actionEvent) {
+        sprzeglo.wcisnij();
+        boolean akt_stan_sprzegla = sprzeglo.getStanSprzegla();
+
+        String wybranyModel = choiceBoxSamochody.getValue();
+        if (wybranyModel != null) {
+            stanSprzeglaSamochodu.put(wybranyModel, String.valueOf(akt_stan_sprzegla));
+
+            for (HashMap.Entry<String, String> entry : stanSprzeglaSamochodu.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (wybranyModel.equals(key)){
+                    System.out.println("Model: " + entry.getKey() + ", Stan: " + entry.getValue());
+
+                    if (value == "true"){
+                        StanSprzeglaField.setText("Wciśnięte");
+                    }
+                    else {
+                        StanSprzeglaField.setText("Nie wciśnięte");
+                    }
+                }
+            }
+
+        } else {
+          System.out.println("Nie wybrano modelu");
+        }
+    }
+
+    public void zwolnij(ActionEvent actionEvent) {
+        sprzeglo.zwolnij();
+        boolean akt_stan_sprzegla = sprzeglo.getStanSprzegla();
+
+        String wybranyModel = choiceBoxSamochody.getValue();
+        if (wybranyModel != null) {
+            stanSprzeglaSamochodu.put(wybranyModel, String.valueOf(akt_stan_sprzegla));
+
+            for (HashMap.Entry<String, String> entry : stanSprzeglaSamochodu.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (wybranyModel.equals(key)){
+                    if (value == "true"){
+                        StanSprzeglaField.setText("Wciśnięte");
+                    }
+                    else {
+                        StanSprzeglaField.setText("Nie wciśnięte");
+                    }
+                }
+
+            }
+            System.out.println("Aktualna zawartość mapy stanu Sprzegla:");
+            for (HashMap.Entry<String, String> entry : stanSprzeglaSamochodu.entrySet()) {
+                System.out.println("Model: " + entry.getKey() + ", Stan: " + entry.getValue());
+            }
+        } else {
+            System.out.println("Nie wybrano modelu");
+        }
+    }
+
+    public void zwiekszBieg(ActionEvent actionEvent) {
+
+        skrzynia_biegow.zwiekszBieg();
+        Integer akt_bieg = skrzynia_biegow.getAktBieg();
+        String wybranyModel = choiceBoxSamochody.getValue();
+        if (wybranyModel != null) {
+            biegSamochodu.put(wybranyModel, akt_bieg);
+
+            // Wyświetlenie biegu dla wybranego modelu w polu tekstowym
+            for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                if (wybranyModel.equals(key)) {
+                    BiegSkrzyniField.setText(String.valueOf(value));
+                }
+            }
+
+            // Wyświetlenie całej zawartości mapy w konsoli
+            System.out.println("Aktualna zawartość mapy biegSamochodu:");
+            for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
+                System.out.println("Model: " + entry.getKey() + ", Bieg: " + entry.getValue());
+            }
+        } else {
+            System.out.println("Nie wybrano modelu");
+        }
+    }
+
+    public void zmniejszBieg(ActionEvent actionEvent) {
+
+        skrzynia_biegow.zmniejszBieg();
+        Integer akt_bieg = skrzynia_biegow.getAktBieg();
+        String wybranyModel = choiceBoxSamochody.getValue();
+        if (wybranyModel != null) {
+            biegSamochodu.put(wybranyModel, akt_bieg);
+
+            // Wyświetlenie biegu dla wybranego modelu w polu tekstowym
+            for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                if (wybranyModel.equals(key)) {
+                    BiegSkrzyniField.setText(String.valueOf(value));
+                }
+            }
+
+            // Wyświetlenie całej zawartości mapy w konsoli
+            System.out.println("Aktualna zawartość mapy biegSamochodu:");
+            for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
+                System.out.println("Model: " + entry.getKey() + ", Bieg: " + entry.getValue());
+            }
+        } else {
+            System.out.println("Nie wybrano modelu");
+        }
+    }
+
     public void start(ActionEvent actionEvent) {
         System.out.println("Uruchomiono samochód");
     }
 
     public void stop(ActionEvent actionEvent) {
         System.out.println("Zatrzymano samochód");
-    }
-
-    public void zwiekszBieg(ActionEvent actionEvent) {
-        skrzynia_biegow.zwiekszBieg();
-        odswiezStanSkrzyni();
-    }
-
-    public void zmniejszBieg(ActionEvent actionEvent) {
-        skrzynia_biegow.zmniejszBieg();
-        odswiezStanSkrzyni();
-    }
-
-    public void nacisnij(ActionEvent actionEvent) {
-        sprzeglo.wcisnij();
-        odswiezStanSprzegla();
-    }
-
-    public void zwolnij(ActionEvent actionEvent) {
-        sprzeglo.zwolnij();
-        odswiezStanSprzegla();
     }
 
     public void dodajGazu(ActionEvent actionEvent) {

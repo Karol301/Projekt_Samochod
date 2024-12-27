@@ -9,10 +9,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import samochod.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.application.Platform;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +29,8 @@ public class OknoGlowneController {
     public TextField BiegSkrzyniField;
     @FXML
     public TextField StanSprzeglaField;
+    @FXML
+    public Pane mapa;
     @FXML
     private TextField modelField;
     @FXML
@@ -52,7 +60,7 @@ public class OknoGlowneController {
     @FXML
     private TextField WagaSprzeglaField;
     @FXML
-    private ImageView carImageView;
+    private ImageView carIcon;
     @FXML
     private ChoiceBox<String> choiceBoxSamochody;
 
@@ -66,6 +74,9 @@ public class OknoGlowneController {
 
     private Sprzeglo sprzeglo;
     private SkrzyniaBiegow skrzynia_biegow;
+    private Samochod samochod; // Referencja do wybranego samochodu
+    private Timeline timeline;
+
 
     @FXML
     public void initialize() {
@@ -73,31 +84,65 @@ public class OknoGlowneController {
 
         choiceBoxSamochody.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             wyswietlDaneSamochodu(newValue);
-            pokazObrazSamochodu(newValue);
             if (newValue != null) {
                 String wybranyModel = newValue;
                 skrzynia_biegow = new SkrzyniaBiegow(wybranyModel);
                 sprzeglo = new Sprzeglo(wybranyModel);
             }
         });
+
+        carIcon = new ImageView(new Image(getClass().getResource("/com/example/projekt_samochod/samochod.png").toExternalForm()));
+        carIcon.setFitWidth(50);
+        carIcon.setFitHeight(50);
+        mapa.getChildren().add(carIcon);
+
+
+
+        choiceBoxSamochody.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            wyswietlDaneSamochodu(newValue);
+            if (newValue != null) {
+                for (Samochod s : listaSamochodow) {
+                    if (s.getModel().equals(newValue)) {
+                        samochod = s;
+                        refresh();
+                        break;
+                    }
+                }
+            }
+        });
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> refresh()));
+        timeline.setCycleCount(Timeline.INDEFINITE);  // Ustawienie cykliczności (nieskończoność)
+        timeline.play();
+        mapa.setOnMouseClicked(this::obsluzKlikniecieMapy);
     }
 
-    private void pokazObrazSamochodu(String model) {
-        if (model != null && !model.isEmpty()) {
-            try {
-                String imagePath = "/com/example/projekt_samochod/samochod.png";
-                Image carImage = new Image(getClass().getResource(imagePath).toExternalForm());
+    private void obsluzKlikniecieMapy(MouseEvent event) {
+        double x = event.getX();
+        double y = event.getY();
+        Pozycja nowaPozycja = new Pozycja(x, y);
+        System.out.println("Klik na mapie: x=" + x + ", y=" + y);
 
-                carImageView.setImage(carImage);
-                carImageView.setVisible(true);
-            } catch (Exception e) {
-                System.err.println("Nie można załadować obrazka dla modelu: " + model);
-                carImageView.setImage(null);
-            }
-        } else {
-            carImageView.setImage(null);
+        if (samochod != null) {
+            samochod.jedzDo(nowaPozycja);
+            samochod.wlacz();
+            System.out.println("Nowy cel: " + samochod.getNowaPozycja());
+        }
+        refresh();
+    }
+
+    private void refresh() {
+        if (samochod != null) {
+            // Logowanie pozycji samochodu przed aktualizacją
+            System.out.println("Aktualna pozycja samochodu: " + samochod.getAktPozycja().getX() + ", " + samochod.getAktPozycja().getY());
+
+            Platform.runLater(() -> {
+                // Aktualizacja pozycji obrazka
+                carIcon.setTranslateX(samochod.getAktPozycja().getX());
+                carIcon.setTranslateY(samochod.getAktPozycja().getY());
+            });
         }
     }
+
 
     public void ustawNowySamochod(Samochod samochod, Silnik silnik, Komponent skrzynia, Komponent sprzeglo) {
         if (samochod != null && silnik != null && skrzynia != null && sprzeglo != null) {
@@ -257,55 +302,63 @@ public class OknoGlowneController {
     }
 
     public void zwiekszBieg(ActionEvent actionEvent) {
-
-        skrzynia_biegow.zwiekszBieg();
-        Integer akt_bieg = skrzynia_biegow.getAktBieg();
         String wybranyModel = choiceBoxSamochody.getValue();
-        if (wybranyModel != null) {
-            biegSamochodu.put(wybranyModel, akt_bieg);
+        String stan_sprzegla = stanSprzeglaSamochodu.get(wybranyModel);
+        if (stan_sprzegla == "true") {
+            skrzynia_biegow.zwiekszBieg();
+            Integer akt_bieg = skrzynia_biegow.getAktBieg();
 
-            // Wyświetlenie biegu dla wybranego modelu w polu tekstowym
-            for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
-                String key = entry.getKey();
-                Integer value = entry.getValue();
-                if (wybranyModel.equals(key)) {
-                    BiegSkrzyniField.setText(String.valueOf(value));
+            if (wybranyModel != null) {
+                biegSamochodu.put(wybranyModel, akt_bieg);
+
+                // Wyświetlenie biegu dla wybranego modelu w polu tekstowym
+                for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
+                    String key = entry.getKey();
+                    Integer value = entry.getValue();
+                    if (wybranyModel.equals(key)) {
+                        BiegSkrzyniField.setText(String.valueOf(value));
+                    }
+                }
+
+                // Wyświetlenie całej zawartości mapy w konsoli
+                System.out.println("Aktualna zawartość mapy biegSamochodu:");
+                for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
+                    System.out.println("Model: " + entry.getKey() + ", Bieg: " + entry.getValue());
                 }
             }
-
-            // Wyświetlenie całej zawartości mapy w konsoli
-            System.out.println("Aktualna zawartość mapy biegSamochodu:");
-            for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
-                System.out.println("Model: " + entry.getKey() + ", Bieg: " + entry.getValue());
-            }
-        } else {
+        }
+        else {
             System.out.println("Nie wybrano modelu");
         }
     }
 
     public void zmniejszBieg(ActionEvent actionEvent) {
-
-        skrzynia_biegow.zmniejszBieg();
-        Integer akt_bieg = skrzynia_biegow.getAktBieg();
         String wybranyModel = choiceBoxSamochody.getValue();
-        if (wybranyModel != null) {
-            biegSamochodu.put(wybranyModel, akt_bieg);
+        String stan_sprzegla = stanSprzeglaSamochodu.get(wybranyModel);
+        if (stan_sprzegla == "true") {
+            skrzynia_biegow.zmniejszBieg();
+            Integer akt_bieg = skrzynia_biegow.getAktBieg();
 
-            // Wyświetlenie biegu dla wybranego modelu w polu tekstowym
-            for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
-                String key = entry.getKey();
-                Integer value = entry.getValue();
-                if (wybranyModel.equals(key)) {
-                    BiegSkrzyniField.setText(String.valueOf(value));
+            if (wybranyModel != null) {
+                biegSamochodu.put(wybranyModel, akt_bieg);
+
+                // Wyświetlenie biegu dla wybranego modelu w polu tekstowym
+                for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
+                    String key = entry.getKey();
+                    Integer value = entry.getValue();
+                    if (wybranyModel.equals(key)) {
+                        BiegSkrzyniField.setText(String.valueOf(value));
+                    }
+                }
+
+                // Wyświetlenie całej zawartości mapy w konsoli
+                System.out.println("Aktualna zawartość mapy biegSamochodu:");
+                for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
+                    System.out.println("Model: " + entry.getKey() + ", Bieg: " + entry.getValue());
                 }
             }
-
-            // Wyświetlenie całej zawartości mapy w konsoli
-            System.out.println("Aktualna zawartość mapy biegSamochodu:");
-            for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
-                System.out.println("Model: " + entry.getKey() + ", Bieg: " + entry.getValue());
-            }
-        } else {
+        }
+        else {
             System.out.println("Nie wybrano modelu");
         }
     }

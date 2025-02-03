@@ -24,13 +24,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class OknoGlowneController {
+public class OknoGlowneController implements Listener {
 
     public TextField BiegSkrzyniField;
     @FXML
     public TextField StanSprzeglaField;
     @FXML
     public Pane mapa;
+    public TextField aktualnaPredkoscField;
+    public TextField aktualneObrotyField;
     @FXML
     private TextField modelField;
     @FXML
@@ -71,12 +73,19 @@ public class OknoGlowneController {
     private ObservableList<String> modeleSamochodow = FXCollections.observableArrayList();
     public HashMap<String, String> stanSprzeglaSamochodu = new HashMap<>();
     public HashMap<String, Integer> biegSamochodu = new HashMap<>();
+    public HashMap<String, Integer> predkoscSamochodu = new HashMap<>();
+    public HashMap<String, Integer> obrotySamochodu = new HashMap<>();
 
     private Sprzeglo sprzeglo;
     private SkrzyniaBiegow skrzynia_biegow;
-    private Samochod samochod; // Referencja do wybranego samochodu
+    private Samochod samochod;
     private Timeline timeline;
+    private Silnik silnik;
 
+    @Override
+    public void update() {
+        Platform.runLater(this::refresh);
+    }
 
     @FXML
     public void initialize() {
@@ -88,6 +97,20 @@ public class OknoGlowneController {
                 String wybranyModel = newValue;
                 skrzynia_biegow = new SkrzyniaBiegow(wybranyModel);
                 sprzeglo = new Sprzeglo(wybranyModel);
+                aktualnaPredkoscField.setText("0");
+                aktualneObrotyField.setText("0");
+                for (Samochod s : listaSamochodow) {
+                    if (s.getModel().equals(newValue)) {
+                        samochod = s;
+                        refresh();
+                        break;
+                    }
+                }
+                for (Silnik s : listaKomponentowSilnika) {
+                    if (s.getNazwa().equals(newValue)) {
+                        silnik = s;
+                    }
+                }
             }
         });
 
@@ -96,22 +119,8 @@ public class OknoGlowneController {
         carIcon.setFitHeight(50);
         mapa.getChildren().add(carIcon);
 
-
-
-        choiceBoxSamochody.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            wyswietlDaneSamochodu(newValue);
-            if (newValue != null) {
-                for (Samochod s : listaSamochodow) {
-                    if (s.getModel().equals(newValue)) {
-                        samochod = s;
-                        refresh();
-                        break;
-                    }
-                }
-            }
-        });
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> refresh()));
-        timeline.setCycleCount(Timeline.INDEFINITE);  // Ustawienie cykliczności (nieskończoność)
+        timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
         mapa.setOnMouseClicked(this::obsluzKlikniecieMapy);
     }
@@ -132,11 +141,9 @@ public class OknoGlowneController {
 
     private void refresh() {
         if (samochod != null) {
-            // Logowanie pozycji samochodu przed aktualizacją
             System.out.println("Aktualna pozycja samochodu: " + samochod.getAktPozycja().getX() + ", " + samochod.getAktPozycja().getY());
 
             Platform.runLater(() -> {
-                // Aktualizacja pozycji obrazka
                 carIcon.setTranslateX(samochod.getAktPozycja().getX());
                 carIcon.setTranslateY(samochod.getAktPozycja().getY());
             });
@@ -147,13 +154,15 @@ public class OknoGlowneController {
     public void ustawNowySamochod(Samochod samochod, Silnik silnik, Komponent skrzynia, Komponent sprzeglo) {
         if (samochod != null && silnik != null && skrzynia != null && sprzeglo != null) {
             listaSamochodow.add(samochod);
+            samochod.addListener(this);
             listaKomponentowSilnika.add(silnik);
             listaKomponentowSkrzyni.add(skrzynia);
             listaKomponentowSprzegla.add(sprzeglo);
             modeleSamochodow.add(samochod.getModel());
 
-            // Aktualizacja ChoiceBox
             choiceBoxSamochody.setItems(modeleSamochodow);
+
+            this.silnik = silnik;
         }
     }
 
@@ -181,6 +190,7 @@ public class OknoGlowneController {
                 nazwaSprzeglaField.setText(komponentSprzeglo.getNazwa());
                 CenaSprzeglaField.setText(String.valueOf(komponentSprzeglo.getCena()));
                 WagaSprzeglaField.setText(String.valueOf(komponentSprzeglo.getWaga()));
+
                 return;
             }
         }
@@ -224,6 +234,7 @@ public class OknoGlowneController {
         for (int i = 0; i < listaSamochodow.size(); i++) {
             if (listaSamochodow.get(i).getModel().equals(model)) {
                 listaSamochodow.remove(i);
+                samochod.removeListener(this);
                 listaKomponentowSilnika.remove(i);
                 listaKomponentowSkrzyni.remove(i);
                 listaKomponentowSprzegla.remove(i);
@@ -248,7 +259,7 @@ public class OknoGlowneController {
         boolean akt_stan_sprzegla = sprzeglo.getStanSprzegla();
 
         String wybranyModel = choiceBoxSamochody.getValue();
-        if (wybranyModel != null) {
+        if (wybranyModel != null && samochod.getStan()) {
             stanSprzeglaSamochodu.put(wybranyModel, String.valueOf(akt_stan_sprzegla));
 
             for (HashMap.Entry<String, String> entry : stanSprzeglaSamochodu.entrySet()) {
@@ -276,7 +287,7 @@ public class OknoGlowneController {
         boolean akt_stan_sprzegla = sprzeglo.getStanSprzegla();
 
         String wybranyModel = choiceBoxSamochody.getValue();
-        if (wybranyModel != null) {
+        if (wybranyModel != null && samochod.getStan()) {
             stanSprzeglaSamochodu.put(wybranyModel, String.valueOf(akt_stan_sprzegla));
 
             for (HashMap.Entry<String, String> entry : stanSprzeglaSamochodu.entrySet()) {
@@ -308,7 +319,7 @@ public class OknoGlowneController {
             skrzynia_biegow.zwiekszBieg();
             Integer akt_bieg = skrzynia_biegow.getAktBieg();
 
-            if (wybranyModel != null) {
+            if (wybranyModel != null && samochod.getStan()) {
                 biegSamochodu.put(wybranyModel, akt_bieg);
 
                 // Wyświetlenie biegu dla wybranego modelu w polu tekstowym
@@ -317,13 +328,9 @@ public class OknoGlowneController {
                     Integer value = entry.getValue();
                     if (wybranyModel.equals(key)) {
                         BiegSkrzyniField.setText(String.valueOf(value));
+                        silnik.resetujObroty();
+                        aktualneObrotyField.setText(String.valueOf(silnik.getObroty()));
                     }
-                }
-
-                // Wyświetlenie całej zawartości mapy w konsoli
-                System.out.println("Aktualna zawartość mapy biegSamochodu:");
-                for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
-                    System.out.println("Model: " + entry.getKey() + ", Bieg: " + entry.getValue());
                 }
             }
         }
@@ -339,22 +346,16 @@ public class OknoGlowneController {
             skrzynia_biegow.zmniejszBieg();
             Integer akt_bieg = skrzynia_biegow.getAktBieg();
 
-            if (wybranyModel != null) {
+            if (wybranyModel != null && samochod.getStan()) {
                 biegSamochodu.put(wybranyModel, akt_bieg);
-
-                // Wyświetlenie biegu dla wybranego modelu w polu tekstowym
                 for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
                     String key = entry.getKey();
                     Integer value = entry.getValue();
                     if (wybranyModel.equals(key)) {
                         BiegSkrzyniField.setText(String.valueOf(value));
+                        silnik.resetujObroty();
+                        aktualneObrotyField.setText(String.valueOf(silnik.getObroty()));
                     }
-                }
-
-                // Wyświetlenie całej zawartości mapy w konsoli
-                System.out.println("Aktualna zawartość mapy biegSamochodu:");
-                for (HashMap.Entry<String, Integer> entry : biegSamochodu.entrySet()) {
-                    System.out.println("Model: " + entry.getKey() + ", Bieg: " + entry.getValue());
                 }
             }
         }
@@ -363,19 +364,79 @@ public class OknoGlowneController {
         }
     }
 
-    public void start(ActionEvent actionEvent) {
-        System.out.println("Uruchomiono samochód");
-    }
-
-    public void stop(ActionEvent actionEvent) {
-        System.out.println("Zatrzymano samochód");
-    }
-
     public void dodajGazu(ActionEvent actionEvent) {
-        System.out.println("Dodano gazu");
+        String wybranyModel = choiceBoxSamochody.getValue();
+
+        if (wybranyModel != null && samochod.getStan()) {
+            silnik.zwiekszObroty();
+            silnik.dodajgazu();
+            Integer aktObroty = silnik.getObroty();
+            Integer aktPredkosc = silnik.getPredkosc();
+
+            obrotySamochodu.put(wybranyModel, aktObroty);
+            predkoscSamochodu.put(wybranyModel, aktPredkosc);
+
+            for (HashMap.Entry<String, Integer> entry : obrotySamochodu.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                if (wybranyModel.equals(key)) {
+                    aktualneObrotyField.setText(String.valueOf(value));
+                }
+            }
+            for (HashMap.Entry<String, Integer> entry : predkoscSamochodu.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                if (wybranyModel.equals(key)) {
+                    aktualnaPredkoscField.setText(String.valueOf(value));
+                }
+            }
+            samochod.setSilnik(silnik);
+            int predkosc = samochod.getAktPredkosc();
+            System.out.println("Aktualna prędkość samochodu: " + predkosc + " km/h");
+        }
     }
 
     public void ujmijGazu(ActionEvent actionEvent) {
-        System.out.println("Ujęto gazu");
+        String wybranyModel = choiceBoxSamochody.getValue();
+
+        if (wybranyModel != null && samochod.getStan()) {
+            silnik.zmniejszObroty();
+            silnik.ujmijgazu();
+            Integer aktObroty = silnik.getObroty();
+            Integer aktPredkosc = silnik.getPredkosc();
+
+            obrotySamochodu.put(wybranyModel, aktObroty);
+            predkoscSamochodu.put(wybranyModel, aktPredkosc);
+
+            for (HashMap.Entry<String, Integer> entry : obrotySamochodu.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                if (wybranyModel.equals(key)) {
+                    aktualneObrotyField.setText(String.valueOf(value));
+                }
+            }
+            for (HashMap.Entry<String, Integer> entry : predkoscSamochodu.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                if (wybranyModel.equals(key)) {
+                    aktualnaPredkoscField.setText(String.valueOf(value));
+                }
+            }
+            samochod.setSilnik(silnik);
+            int predkosc = samochod.getAktPredkosc();
+            System.out.println("Aktualna prędkość samochodu: " + predkosc + " km/h");
+        }
+    }
+
+    public void start(ActionEvent actionEvent) {
+        silnik.uruchom();
+        samochod.wlacz();
+        aktualneObrotyField.setText(String.valueOf(silnik.getObroty()));
+    }
+
+    public void stop(ActionEvent actionEvent) {
+        samochod.wylacz();
+        aktualneObrotyField.setText(String.valueOf(0));
+        aktualnaPredkoscField.setText(String.valueOf(0));
     }
 }

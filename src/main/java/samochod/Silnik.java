@@ -3,6 +3,8 @@ package samochod;
 public class Silnik extends Komponent {
     private int maxObroty;
     private int obroty;
+    private int predkosc;
+    private boolean stanWlaczenia;
 
     public Silnik(String nazwa, double waga, double cena, int maxObroty) {
         super(nazwa, waga, cena);
@@ -11,24 +13,44 @@ public class Silnik extends Komponent {
     }
 
     public void uruchom() {
-        obroty = 1000; // domyślne obroty początkowe
+        obroty = 700;
+        stanWlaczenia = true;
+    }
+
+    public String getNazwa() {
+        return super.getNazwa();
     }
 
     public void zatrzymaj() {
         obroty = 0;
+        stanWlaczenia = false;
     }
-
 
     public void zwiekszObroty() {
         if (obroty < maxObroty) {
-            obroty += 500;
+            obroty += 300;
         }
     }
 
     public void zmniejszObroty() {
-        if (obroty > 0) {
-            obroty -= 500;
+        if (obroty > 700) {
+            obroty -= 300;
         }
+    }
+
+    public void dodajgazu() {
+        if (obroty > 700 && obroty < 4000) {
+            predkosc += 3;
+        }
+    }
+    public void ujmijgazu(){
+        if (obroty > 700 && obroty < 4000) {
+            predkosc -= 3;
+        }
+    }
+
+    public void resetujObroty() {
+        obroty = 2000;
     }
 
     public int getMaxObroty() {
@@ -37,6 +59,10 @@ public class Silnik extends Komponent {
 
     public int getObroty() {
         return obroty;
+    }
+
+    public int getPredkosc() {
+        return predkosc;
     }
 }
 

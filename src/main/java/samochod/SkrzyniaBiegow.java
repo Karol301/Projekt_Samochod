@@ -26,12 +26,4 @@ public class SkrzyniaBiegow{
     public int getAktBieg() {
         return aktualnyBieg;
     }
-
-    public double getAktPrzelozenie() {
-        return aktualnePrzelozenie;
-    }
-
-    public void setAktPrzelozenie(double przelozenie) {
-        this.aktualnePrzelozenie = przelozenie;
-    }
 }
